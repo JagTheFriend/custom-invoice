@@ -28,7 +28,11 @@ const generateInvoiceNo = () => {
 
 const todayDate = () => {
   const d = new Date();
-  return d.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" });
+  return d.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 };
 
 const EMPTY_ROWS_TARGET = 15;
@@ -42,10 +46,22 @@ const Index = () => {
   const [discount, setDiscount] = useState(0);
   const [remarks, setRemarks] = useState("");
   const [items, setItems] = useState<InvoiceItem[]>([
-    { id: 1, hsCode: "", description: "", qty: 1, uom: "PCS", rate: 0, amount: 0 },
+    {
+      id: 1,
+      hsCode: "",
+      description: "",
+      qty: 1,
+      uom: "PCS",
+      rate: 0,
+      amount: 0,
+    },
   ]);
 
-  const updateItem = (id: number, field: keyof InvoiceItem, value: string | number) => {
+  const updateItem = (
+    id: number,
+    field: keyof InvoiceItem,
+    value: string | number,
+  ) => {
     setItems((prev) =>
       prev.map((item) => {
         if (item.id !== id) return item;
@@ -54,13 +70,25 @@ const Index = () => {
           updated.amount = Number(updated.qty) * Number(updated.rate);
         }
         return updated;
-      })
+      }),
     );
   };
 
   const addItem = () => {
-    const newId = items.length > 0 ? Math.max(...items.map((i) => i.id)) + 1 : 1;
-    setItems([...items, { id: newId, hsCode: "", description: "", qty: 1, uom: "PCS", rate: 0, amount: 0 }]);
+    const newId =
+      items.length > 0 ? Math.max(...items.map((i) => i.id)) + 1 : 1;
+    setItems([
+      ...items,
+      {
+        id: newId,
+        hsCode: "",
+        description: "",
+        qty: 1,
+        uom: "PCS",
+        rate: 0,
+        amount: 0,
+      },
+    ]);
   };
 
   const removeItem = (id: number) => {
@@ -73,7 +101,11 @@ const Index = () => {
   const vat = taxable * 0.13;
   const netTotal = taxable + vat;
 
-  const fmt = (n: number) => n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const fmt = (n: number) =>
+    n.toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
 
   const emptyRowCount = Math.max(0, EMPTY_ROWS_TARGET - items.length);
 
@@ -81,7 +113,9 @@ const Index = () => {
     <div className="min-h-screen bg-background p-4 md:p-8">
       {/* Action bar */}
       <div className="no-print mx-auto mb-6 flex max-w-[210mm] items-center justify-between">
-        <h1 className="text-2xl font-bold text-foreground">Invoice Generator</h1>
+        <h1 className="text-2xl font-bold text-foreground">
+          Invoice Generator
+        </h1>
         <button
           onClick={() => window.print()}
           className="flex items-center gap-2 rounded bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
@@ -95,7 +129,9 @@ const Index = () => {
       <div className="invoice-container mx-auto max-w-[210mm] border border-foreground bg-card p-8 shadow-sm md:p-10">
         {/* Header */}
         <div className="border-b-2 border-foreground pb-3 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground">Tax Invoice</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground">
+            Tax Invoice
+          </p>
           <h2 className="mt-0.5 text-xl font-extrabold uppercase tracking-wide text-foreground">
             {BUSINESS.name}
           </h2>
@@ -107,7 +143,9 @@ const Index = () => {
         <div className="mt-3 flex flex-col gap-0 text-[12px] md:flex-row md:justify-between">
           <div className="space-y-0.5">
             <div className="flex">
-              <span className="inline-block w-[70px] font-bold text-foreground">PARTY</span>
+              <span className="inline-block w-[70px] font-bold text-foreground">
+                PARTY
+              </span>
               <span className="text-foreground">: </span>
               <input
                 value={customerName}
@@ -117,7 +155,9 @@ const Index = () => {
               />
             </div>
             <div className="flex">
-              <span className="inline-block w-[70px] font-bold text-foreground">ADDRESS</span>
+              <span className="inline-block w-[70px] font-bold text-foreground">
+                ADDRESS
+              </span>
               <span className="text-foreground">: </span>
               <input
                 value={customerContact}
@@ -127,7 +167,9 @@ const Index = () => {
               />
             </div>
             <div className="flex">
-              <span className="inline-block w-[70px] font-bold text-foreground">VAT/PAN</span>
+              <span className="inline-block w-[70px] font-bold text-foreground">
+                VAT/PAN
+              </span>
               <span className="text-foreground">: {BUSINESS.vat}</span>
             </div>
           </div>
@@ -181,17 +223,22 @@ const Index = () => {
         </div>
 
         {/* Items Table */}
-        <table className="mt-2 w-full border-collapse text-[12px]" style={{ borderColor: "hsl(var(--foreground))" }}>
+        <table
+          className="mt-2 w-full border-collapse text-[12px]"
+          style={{ borderColor: "hsl(var(--foreground))" }}
+        >
           <thead>
             <tr className="text-foreground">
               <th className="invoice-cell w-[30px] text-center">SN</th>
               <th className="invoice-cell w-[75px] text-left">H.S CODE</th>
               <th className="invoice-cell text-left">DESCRIPTION</th>
               <th className="invoice-cell w-[50px] text-center">QTY</th>
-              <th className="invoice-cell w-[45px] text-center">UOM</th>
+              <th className="invoice-cell w-[50px] text-center">UOM</th>
               <th className="invoice-cell w-[85px] text-right">RATE</th>
               <th className="invoice-cell w-[90px] text-right">AMOUNT</th>
-              <th className="no-print invoice-cell w-[30px] text-center">&nbsp;</th>
+              <th className="no-print invoice-cell w-[30px] text-center">
+                &nbsp;
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -199,23 +246,70 @@ const Index = () => {
               <tr key={item.id} className="text-foreground">
                 <td className="invoice-cell text-center">{idx + 1}</td>
                 <td className="invoice-cell p-0">
-                  <input value={item.hsCode} onChange={(e) => updateItem(item.id, "hsCode", e.target.value)} className="invoice-table-input text-foreground" />
+                  <input
+                    value={item.hsCode}
+                    onChange={(e) =>
+                      updateItem(item.id, "hsCode", e.target.value)
+                    }
+                    className="invoice-table-input text-foreground"
+                  />
                 </td>
                 <td className="invoice-cell p-0">
-                  <input value={item.description} onChange={(e) => updateItem(item.id, "description", e.target.value)} placeholder="Item description" className="invoice-table-input text-foreground placeholder:text-muted-foreground" />
+                  <input
+                    value={item.description}
+                    onChange={(e) =>
+                      updateItem(item.id, "description", e.target.value)
+                    }
+                    placeholder="Item description"
+                    className="invoice-table-input text-foreground placeholder:text-muted-foreground"
+                  />
                 </td>
                 <td className="invoice-cell p-0">
-                  <input type="number" min={0} value={item.qty} onChange={(e) => updateItem(item.id, "qty", parseFloat(e.target.value) || 0)} className="invoice-table-input text-center text-foreground" />
+                  <input
+                    type="number"
+                    min={0}
+                    value={item.qty}
+                    onChange={(e) =>
+                      updateItem(
+                        item.id,
+                        "qty",
+                        parseFloat(e.target.value) || 0,
+                      )
+                    }
+                    className="invoice-table-input text-center text-foreground"
+                  />
                 </td>
                 <td className="invoice-cell p-0">
-                  <input value={item.uom} onChange={(e) => updateItem(item.id, "uom", e.target.value)} className="invoice-table-input text-center text-foreground" />
+                  <input
+                    value={item.uom}
+                    onChange={(e) => updateItem(item.id, "uom", e.target.value)}
+                    className="invoice-table-input text-center text-foreground"
+                  />
                 </td>
                 <td className="invoice-cell p-0">
-                  <input type="number" min={0} value={item.rate || ""} onChange={(e) => updateItem(item.id, "rate", parseFloat(e.target.value) || 0)} className="invoice-table-input text-right text-foreground" />
+                  <input
+                    type="number"
+                    min={0}
+                    value={item.rate || ""}
+                    onChange={(e) =>
+                      updateItem(
+                        item.id,
+                        "rate",
+                        parseFloat(e.target.value) || 0,
+                      )
+                    }
+                    className="invoice-table-input text-right text-foreground"
+                  />
                 </td>
-                <td className="invoice-cell text-right font-mono">{fmt(item.amount)}</td>
+                <td className="invoice-cell text-right font-mono">
+                  {fmt(item.amount)}
+                </td>
                 <td className="no-print invoice-cell text-center">
-                  <button onClick={() => removeItem(item.id)} className="text-destructive hover:opacity-70 disabled:opacity-30" disabled={items.length <= 1}>
+                  <button
+                    onClick={() => removeItem(item.id)}
+                    className="text-destructive hover:opacity-70 disabled:opacity-30"
+                    disabled={items.length <= 1}
+                  >
                     <Trash2 size={14} />
                   </button>
                 </td>
@@ -241,7 +335,9 @@ const Index = () => {
               <td className="invoice-cell"></td>
               <td className="invoice-cell"></td>
               <td className="invoice-cell"></td>
-              <td className="invoice-cell text-right font-mono">{fmt(subtotal)}</td>
+              <td className="invoice-cell text-right font-mono">
+                {fmt(subtotal)}
+              </td>
               <td className="no-print invoice-cell"></td>
             </tr>
           </tbody>
@@ -249,23 +345,33 @@ const Index = () => {
 
         {/* Add item button */}
         <div className="no-print mt-2">
-          <button onClick={addItem} className="flex items-center gap-1.5 rounded border border-input px-3 py-1.5 text-xs font-medium text-foreground transition hover:bg-secondary">
+          <button
+            onClick={addItem}
+            className="flex items-center gap-1.5 rounded border border-input px-3 py-1.5 text-xs font-medium text-foreground transition hover:bg-secondary"
+          >
             <Plus size={14} /> Add Item
           </button>
         </div>
 
         {/* Bottom section: INWORDS/REMARKS left, DISCOUNT/TAXABLE/VAT/NET right */}
-        <div className="mt-0 flex text-[12px]" style={{ borderColor: "hsl(var(--foreground))" }}>
+        <div
+          className="mt-0 flex text-[12px]"
+          style={{ borderColor: "hsl(var(--foreground))" }}
+        >
           {/* Left: INWORDS + REMARKS */}
           <div className="flex-1 border border-t-0 border-foreground">
             <div className="flex border-b border-foreground">
-              <div className="w-[80px] shrink-0 border-r border-foreground px-2 py-1.5 font-bold text-foreground">INWORDS</div>
+              <div className="w-[80px] shrink-0 border-r border-foreground px-2 py-1.5 font-bold text-foreground">
+                INWORDS
+              </div>
               <div className="flex-1 px-2 py-1.5 text-foreground italic">
                 {numberToWords(Math.round(netTotal))} only.
               </div>
             </div>
             <div className="flex">
-              <div className="w-[80px] shrink-0 border-r border-foreground px-2 py-1.5 font-bold text-foreground">REMARKS</div>
+              <div className="w-[80px] shrink-0 border-r border-foreground px-2 py-1.5 font-bold text-foreground">
+                REMARKS
+              </div>
               <div className="flex-1 px-2 py-1">
                 <textarea
                   value={remarks}
@@ -285,8 +391,13 @@ const Index = () => {
               { label: "VAT 13%", value: fmt(vat) },
               { label: "NET TOTAL", value: fmt(netTotal), bold: true },
             ].map((row) => (
-              <div key={row.label} className={`flex border-t border-foreground ${row.bold ? "font-bold" : ""}`}>
-                <div className="flex-1 border-r border-foreground px-2 py-1.5 text-foreground">{row.label}</div>
+              <div
+                key={row.label}
+                className={`flex border-t border-foreground ${row.bold ? "font-bold" : ""}`}
+              >
+                <div className="flex-1 border-r border-foreground px-2 py-1.5 text-foreground">
+                  {row.label}
+                </div>
                 <div className="w-[100px] px-2 py-1.5 text-right font-mono text-foreground">
                   {row.value !== null ? (
                     row.value
@@ -295,7 +406,9 @@ const Index = () => {
                       type="number"
                       min={0}
                       value={discount || ""}
-                      onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
+                      onChange={(e) =>
+                        setDiscount(parseFloat(e.target.value) || 0)
+                      }
                       className="invoice-input w-full text-right font-mono text-foreground"
                     />
                   )}
@@ -326,17 +439,68 @@ const Index = () => {
 
 function numberToWords(num: number): string {
   if (num === 0) return "Zero";
-  const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
-    "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
-  const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+  const ones = [
+    "",
+    "One",
+    "Two",
+    "Three",
+    "Four",
+    "Five",
+    "Six",
+    "Seven",
+    "Eight",
+    "Nine",
+    "Ten",
+    "Eleven",
+    "Twelve",
+    "Thirteen",
+    "Fourteen",
+    "Fifteen",
+    "Sixteen",
+    "Seventeen",
+    "Eighteen",
+    "Nineteen",
+  ];
+  const tens = [
+    "",
+    "",
+    "Twenty",
+    "Thirty",
+    "Forty",
+    "Fifty",
+    "Sixty",
+    "Seventy",
+    "Eighty",
+    "Ninety",
+  ];
   const convertLakh = (n: number): string => {
     if (n === 0) return "";
     if (n < 20) return ones[n];
-    if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 ? " " + ones[n % 10] : "");
-    if (n < 1000) return ones[Math.floor(n / 100)] + " Hundred" + (n % 100 ? " " + convertLakh(n % 100) : "");
-    if (n < 100000) return convertLakh(Math.floor(n / 1000)) + " Thousand" + (n % 1000 ? " " + convertLakh(n % 1000) : "");
-    if (n < 10000000) return convertLakh(Math.floor(n / 100000)) + " Lakh" + (n % 100000 ? " " + convertLakh(n % 100000) : "");
-    return convertLakh(Math.floor(n / 10000000)) + " Crore" + (n % 10000000 ? " " + convertLakh(n % 10000000) : "");
+    if (n < 100)
+      return tens[Math.floor(n / 10)] + (n % 10 ? " " + ones[n % 10] : "");
+    if (n < 1000)
+      return (
+        ones[Math.floor(n / 100)] +
+        " Hundred" +
+        (n % 100 ? " " + convertLakh(n % 100) : "")
+      );
+    if (n < 100000)
+      return (
+        convertLakh(Math.floor(n / 1000)) +
+        " Thousand" +
+        (n % 1000 ? " " + convertLakh(n % 1000) : "")
+      );
+    if (n < 10000000)
+      return (
+        convertLakh(Math.floor(n / 100000)) +
+        " Lakh" +
+        (n % 100000 ? " " + convertLakh(n % 100000) : "")
+      );
+    return (
+      convertLakh(Math.floor(n / 10000000)) +
+      " Crore" +
+      (n % 10000000 ? " " + convertLakh(n % 10000000) : "")
+    );
   };
   return convertLakh(num);
 }
