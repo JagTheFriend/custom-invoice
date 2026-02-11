@@ -360,7 +360,7 @@ const Index = () => {
         >
           {/* Left: INWORDS + REMARKS */}
           <div className="flex-1 border border-t-0 border-foreground">
-            <div className="flex border-b border-foreground">
+            <div className="h-[95px] flex border-b border-foreground">
               <div className="w-[80px] shrink-0 border-r border-foreground px-2 py-1.5 font-bold text-foreground">
                 INWORDS
               </div>
