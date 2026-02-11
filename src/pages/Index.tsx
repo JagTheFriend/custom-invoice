@@ -27,6 +27,8 @@ const todayDate = () => {
   return d.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" });
 };
 
+const EMPTY_ROWS_TARGET = 15;
+
 const Index = () => {
   const [invoiceNo, setInvoiceNo] = useState(generateInvoiceNo());
   const [invoiceDate, setInvoiceDate] = useState(todayDate());
@@ -67,17 +69,17 @@ const Index = () => {
   const vat = taxable * 0.13;
   const netTotal = taxable + vat;
 
-  const formatNum = (n: number) => n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const fmt = (n: number) => n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-  const handlePrint = () => window.print();
+  const emptyRowCount = Math.max(0, EMPTY_ROWS_TARGET - items.length);
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
-      {/* Action bar - hidden on print */}
-      <div className="no-print mx-auto mb-6 flex max-w-4xl items-center justify-between">
+      {/* Action bar */}
+      <div className="no-print mx-auto mb-6 flex max-w-[210mm] items-center justify-between">
         <h1 className="text-2xl font-bold text-foreground">Invoice Generator</h1>
         <button
-          onClick={handlePrint}
+          onClick={() => window.print()}
           className="flex items-center gap-2 rounded bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
         >
           <Printer size={18} />
@@ -86,265 +88,219 @@ const Index = () => {
       </div>
 
       {/* Invoice */}
-      <div className="invoice-container mx-auto max-w-4xl rounded border border-invoice-border bg-card p-6 shadow-sm md:p-10">
+      <div className="invoice-container mx-auto max-w-[210mm] border border-foreground bg-card p-8 shadow-sm md:p-10">
         {/* Header */}
-        <div className="mb-1 border-b-2 border-foreground pb-4 text-center">
-          <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Tax Invoice</p>
-          <h2 className="mt-1 text-2xl font-bold uppercase tracking-wide text-foreground">
+        <div className="border-b-2 border-foreground pb-3 text-center">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground">Tax Invoice</p>
+          <h2 className="mt-0.5 text-xl font-extrabold uppercase tracking-wide text-foreground">
             {BUSINESS.name}
           </h2>
-          <p className="text-sm text-muted-foreground">{BUSINESS.address}</p>
-          <p className="text-sm text-muted-foreground">PAN NO: {BUSINESS.vat}</p>
+          <p className="text-xs text-foreground">{BUSINESS.address}</p>
+          <p className="text-xs text-foreground">PAN NO :{BUSINESS.vat}</p>
         </div>
 
-        {/* Party + Invoice info */}
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="space-y-1.5 text-sm">
-            <div className="flex gap-2">
-              <span className="w-20 font-semibold text-foreground">PARTY</span>
-              <span className="text-muted-foreground">:</span>
+        {/* Party + Invoice meta */}
+        <div className="mt-3 flex flex-col gap-0 text-[12px] md:flex-row md:justify-between">
+          <div className="space-y-0.5">
+            <div className="flex">
+              <span className="inline-block w-[70px] font-bold text-foreground">PARTY</span>
+              <span className="text-foreground">: </span>
               <input
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 placeholder="Customer Name"
-                className="no-print-border flex-1 border-b border-dashed border-input bg-transparent px-1 text-foreground outline-none placeholder:text-muted-foreground focus:border-foreground"
+                className="invoice-input ml-1 flex-1 text-foreground"
               />
-              <span className="print-only flex-1 text-foreground">{customerName}</span>
             </div>
-            <div className="flex gap-2">
-              <span className="w-20 font-semibold text-foreground">ADDRESS</span>
-              <span className="text-muted-foreground">:</span>
+            <div className="flex">
+              <span className="inline-block w-[70px] font-bold text-foreground">ADDRESS</span>
+              <span className="text-foreground">: </span>
               <input
                 value={customerContact}
                 onChange={(e) => setCustomerContact(e.target.value)}
-                placeholder="Address / Contact"
-                className="no-print-border flex-1 border-b border-dashed border-input bg-transparent px-1 text-foreground outline-none placeholder:text-muted-foreground focus:border-foreground"
+                placeholder="Address"
+                className="invoice-input ml-1 flex-1 text-foreground"
               />
             </div>
-            <div className="flex gap-2">
-              <span className="w-20 font-semibold text-foreground">VAT/PAN</span>
-              <span className="text-muted-foreground">:</span>
-              <span className="text-foreground">{BUSINESS.vat}</span>
+            <div className="flex">
+              <span className="inline-block w-[70px] font-bold text-foreground">VAT/PAN</span>
+              <span className="text-foreground">: {BUSINESS.vat}</span>
             </div>
           </div>
-          <div className="space-y-1.5 text-sm md:text-right">
-            <div className="flex justify-start gap-2 md:justify-end">
-              <span className="font-semibold text-foreground">INVOICE NO</span>
-              <span className="text-muted-foreground">:</span>
+          <div className="mt-2 space-y-0.5 md:mt-0 md:text-right">
+            <div className="flex md:justify-end">
+              <span className="font-bold text-foreground">INVOICE NO</span>
+              <span className="text-foreground ml-2">: </span>
               <input
                 value={invoiceNo}
                 onChange={(e) => setInvoiceNo(e.target.value)}
-                className="no-print-border w-28 border-b border-dashed border-input bg-transparent px-1 text-right text-foreground outline-none focus:border-foreground"
+                className="invoice-input ml-1 w-[100px] text-right text-foreground"
               />
             </div>
-            <div className="flex justify-start gap-2 md:justify-end">
-              <span className="font-semibold text-foreground">INVOICE DATE</span>
-              <span className="text-muted-foreground">:</span>
+            <div className="flex md:justify-end">
+              <span className="font-bold text-foreground">INVOICE DATE</span>
+              <span className="text-foreground ml-2">: </span>
               <input
                 value={invoiceDate}
                 onChange={(e) => setInvoiceDate(e.target.value)}
-                className="no-print-border w-28 border-b border-dashed border-input bg-transparent px-1 text-right text-foreground outline-none focus:border-foreground"
+                className="invoice-input ml-1 w-[100px] text-right text-foreground"
               />
             </div>
           </div>
         </div>
 
         {/* Pay Mode */}
-        <div className="mt-4 text-center text-sm font-semibold text-foreground">
-          PAY MODE : &nbsp;
+        <div className="mt-3 text-center text-[12px] font-bold text-foreground">
+          PAY MODE &nbsp;: &nbsp;
           <select
             value={payMode}
             onChange={(e) => setPayMode(e.target.value)}
-            className="no-print-border border-b border-dashed border-input bg-transparent text-foreground outline-none"
+            className="invoice-input text-foreground font-bold"
           >
             <option value="CASH">CASH</option>
             <option value="CHEQ">CHEQ</option>
             <option value="CREDIT">CREDIT</option>
+            <option value="CASH/CHEQ/CREDIT">CASH/CHEQ/CREDIT</option>
           </select>
         </div>
 
         {/* Items Table */}
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full border-collapse border border-invoice-border text-sm">
-            <thead>
-              <tr className="bg-invoice-header-bg text-foreground">
-                <th className="border border-invoice-border px-2 py-2 text-center w-10">SN</th>
-                <th className="border border-invoice-border px-2 py-2 text-left w-24">H.S CODE</th>
-                <th className="border border-invoice-border px-2 py-2 text-left">DESCRIPTION</th>
-                <th className="border border-invoice-border px-2 py-2 text-center w-16">QTY</th>
-                <th className="border border-invoice-border px-2 py-2 text-center w-16">UOM</th>
-                <th className="border border-invoice-border px-2 py-2 text-right w-28">RATE</th>
-                <th className="border border-invoice-border px-2 py-2 text-right w-28">AMOUNT</th>
-                <th className="no-print border border-invoice-border px-2 py-2 text-center w-10"></th>
+        <table className="mt-2 w-full border-collapse text-[12px]" style={{ borderColor: "hsl(var(--foreground))" }}>
+          <thead>
+            <tr className="text-foreground">
+              <th className="invoice-cell w-[30px] text-center">SN</th>
+              <th className="invoice-cell w-[75px] text-left">H.S CODE</th>
+              <th className="invoice-cell text-left">DESCRIPTION</th>
+              <th className="invoice-cell w-[50px] text-center">QTY</th>
+              <th className="invoice-cell w-[45px] text-center">UOM</th>
+              <th className="invoice-cell w-[85px] text-right">RATE</th>
+              <th className="invoice-cell w-[90px] text-right">AMOUNT</th>
+              <th className="no-print invoice-cell w-[30px] text-center">&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((item, idx) => (
+              <tr key={item.id} className="text-foreground">
+                <td className="invoice-cell text-center">{idx + 1}</td>
+                <td className="invoice-cell p-0">
+                  <input value={item.hsCode} onChange={(e) => updateItem(item.id, "hsCode", e.target.value)} className="invoice-table-input text-foreground" />
+                </td>
+                <td className="invoice-cell p-0">
+                  <input value={item.description} onChange={(e) => updateItem(item.id, "description", e.target.value)} placeholder="Item description" className="invoice-table-input text-foreground placeholder:text-muted-foreground" />
+                </td>
+                <td className="invoice-cell p-0">
+                  <input type="number" min={0} value={item.qty} onChange={(e) => updateItem(item.id, "qty", parseFloat(e.target.value) || 0)} className="invoice-table-input text-center text-foreground" />
+                </td>
+                <td className="invoice-cell p-0">
+                  <input value={item.uom} onChange={(e) => updateItem(item.id, "uom", e.target.value)} className="invoice-table-input text-center text-foreground" />
+                </td>
+                <td className="invoice-cell p-0">
+                  <input type="number" min={0} value={item.rate || ""} onChange={(e) => updateItem(item.id, "rate", parseFloat(e.target.value) || 0)} className="invoice-table-input text-right text-foreground" />
+                </td>
+                <td className="invoice-cell text-right font-mono">{fmt(item.amount)}</td>
+                <td className="no-print invoice-cell text-center">
+                  <button onClick={() => removeItem(item.id)} className="text-destructive hover:opacity-70 disabled:opacity-30" disabled={items.length <= 1}>
+                    <Trash2 size={14} />
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {items.map((item, idx) => (
-                <tr key={item.id} className="text-foreground">
-                  <td className="border border-invoice-border px-2 py-1.5 text-center">{idx + 1}</td>
-                  <td className="border border-invoice-border px-1 py-1">
-                    <input
-                      value={item.hsCode}
-                      onChange={(e) => updateItem(item.id, "hsCode", e.target.value)}
-                      className="w-full bg-transparent px-1 outline-none text-foreground"
-                    />
-                  </td>
-                  <td className="border border-invoice-border px-1 py-1">
-                    <input
-                      value={item.description}
-                      onChange={(e) => updateItem(item.id, "description", e.target.value)}
-                      placeholder="Item description"
-                      className="w-full bg-transparent px-1 outline-none text-foreground placeholder:text-muted-foreground"
-                    />
-                  </td>
-                  <td className="border border-invoice-border px-1 py-1">
-                    <input
-                      type="number"
-                      min={0}
-                      value={item.qty}
-                      onChange={(e) => updateItem(item.id, "qty", parseFloat(e.target.value) || 0)}
-                      className="w-full bg-transparent px-1 text-center outline-none text-foreground"
-                    />
-                  </td>
-                  <td className="border border-invoice-border px-1 py-1">
-                    <input
-                      value={item.uom}
-                      onChange={(e) => updateItem(item.id, "uom", e.target.value)}
-                      className="w-full bg-transparent px-1 text-center outline-none text-foreground"
-                    />
-                  </td>
-                  <td className="border border-invoice-border px-1 py-1">
-                    <input
-                      type="number"
-                      min={0}
-                      value={item.rate || ""}
-                      onChange={(e) => updateItem(item.id, "rate", parseFloat(e.target.value) || 0)}
-                      className="w-full bg-transparent px-1 text-right outline-none text-foreground"
-                    />
-                  </td>
-                  <td className="border border-invoice-border px-2 py-1.5 text-right font-mono">
-                    {formatNum(item.amount)}
-                  </td>
-                  <td className="no-print border border-invoice-border px-1 py-1 text-center">
-                    <button
-                      onClick={() => removeItem(item.id)}
-                      className="text-destructive hover:opacity-70 disabled:opacity-30"
-                      disabled={items.length <= 1}
-                    >
-                      <Trash2 size={15} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {/* Empty rows for print to fill space */}
-              {items.length < 10 &&
-                Array.from({ length: Math.max(0, 6 - items.length) }).map((_, i) => (
-                  <tr key={`empty-${i}`} className="print-only">
-                    <td className="border border-invoice-border px-2 py-3">&nbsp;</td>
-                    <td className="border border-invoice-border px-2 py-3"></td>
-                    <td className="border border-invoice-border px-2 py-3"></td>
-                    <td className="border border-invoice-border px-2 py-3"></td>
-                    <td className="border border-invoice-border px-2 py-3"></td>
-                    <td className="border border-invoice-border px-2 py-3"></td>
-                    <td className="border border-invoice-border px-2 py-3"></td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+            {/* Empty rows to fill page */}
+            {Array.from({ length: emptyRowCount }).map((_, i) => (
+              <tr key={`e-${i}`}>
+                <td className="invoice-cell h-[22px]">&nbsp;</td>
+                <td className="invoice-cell"></td>
+                <td className="invoice-cell"></td>
+                <td className="invoice-cell"></td>
+                <td className="invoice-cell"></td>
+                <td className="invoice-cell"></td>
+                <td className="invoice-cell"></td>
+                <td className="no-print invoice-cell"></td>
+              </tr>
+            ))}
+            {/* TOTAL row */}
+            <tr className="text-foreground font-bold">
+              <td className="invoice-cell" colSpan={2}></td>
+              <td className="invoice-cell text-center font-bold">TOTAL</td>
+              <td className="invoice-cell"></td>
+              <td className="invoice-cell"></td>
+              <td className="invoice-cell"></td>
+              <td className="invoice-cell text-right font-mono">{fmt(subtotal)}</td>
+              <td className="no-print invoice-cell"></td>
+            </tr>
+          </tbody>
+        </table>
 
         {/* Add item button */}
-        <div className="no-print mt-3">
-          <button
-            onClick={addItem}
-            className="flex items-center gap-1.5 rounded border border-input px-3 py-1.5 text-sm font-medium text-foreground transition hover:bg-secondary"
-          >
-            <Plus size={15} />
-            Add Item
+        <div className="no-print mt-2">
+          <button onClick={addItem} className="flex items-center gap-1.5 rounded border border-input px-3 py-1.5 text-xs font-medium text-foreground transition hover:bg-secondary">
+            <Plus size={14} /> Add Item
           </button>
         </div>
 
-        {/* Totals section */}
-        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-          {/* Left side: In Words + Remarks */}
-          <div className="space-y-3 text-sm">
-            <div className="border border-invoice-border p-3">
-              <div className="flex gap-2">
-                <span className="w-24 shrink-0 font-semibold text-foreground">TOTAL</span>
-                <span className="border-b border-dashed border-invoice-border text-right font-bold text-foreground md:hidden">
-                  {formatNum(subtotal)}
-                </span>
+        {/* Bottom section: INWORDS/REMARKS left, DISCOUNT/TAXABLE/VAT/NET right */}
+        <div className="mt-0 flex text-[12px]" style={{ borderColor: "hsl(var(--foreground))" }}>
+          {/* Left: INWORDS + REMARKS */}
+          <div className="flex-1 border border-t-0 border-foreground">
+            <div className="flex border-b border-foreground">
+              <div className="w-[80px] shrink-0 border-r border-foreground px-2 py-1.5 font-bold text-foreground">INWORDS</div>
+              <div className="flex-1 px-2 py-1.5 text-foreground italic">
+                {numberToWords(Math.round(netTotal))} only.
               </div>
             </div>
-            <div className="border border-invoice-border p-3">
-              <p className="font-semibold text-foreground">INWORDS</p>
-              <p className="mt-1 text-muted-foreground italic">{numberToWords(Math.round(netTotal))} only.</p>
-            </div>
-            <div className="border border-invoice-border p-3">
-              <p className="font-semibold text-foreground">REMARKS</p>
-              <textarea
-                value={remarks}
-                onChange={(e) => setRemarks(e.target.value)}
-                rows={2}
-                className="no-print-border mt-1 w-full resize-none bg-transparent text-foreground outline-none placeholder:text-muted-foreground"
-                placeholder="Any remarks..."
-              />
+            <div className="flex">
+              <div className="w-[80px] shrink-0 border-r border-foreground px-2 py-1.5 font-bold text-foreground">REMARKS</div>
+              <div className="flex-1 px-2 py-1">
+                <textarea
+                  value={remarks}
+                  onChange={(e) => setRemarks(e.target.value)}
+                  rows={3}
+                  className="invoice-input w-full resize-none text-foreground"
+                  placeholder="Any remarks..."
+                />
+              </div>
             </div>
           </div>
-
-          {/* Right side: Calculations */}
-          <div className="text-sm">
-            <table className="ml-auto w-full border-collapse border border-invoice-border md:w-64">
-              <tbody>
-                <tr>
-                  <td className="border border-invoice-border px-3 py-2 font-semibold text-foreground">TOTAL</td>
-                  <td className="border border-invoice-border px-3 py-2 text-right font-mono text-foreground">
-                    {formatNum(subtotal)}
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-invoice-border px-3 py-2 font-semibold text-foreground">DISCOUNT</td>
-                  <td className="border border-invoice-border px-1 py-1 text-right">
+          {/* Right: Calculations */}
+          <div className="w-[220px] shrink-0 border-b border-r border-foreground">
+            {[
+              { label: "DISCOUNT", value: null },
+              { label: "TAXABLE", value: fmt(taxable) },
+              { label: "VAT 13%", value: fmt(vat) },
+              { label: "NET TOTAL", value: fmt(netTotal), bold: true },
+            ].map((row) => (
+              <div key={row.label} className={`flex border-t border-foreground ${row.bold ? "font-bold" : ""}`}>
+                <div className="flex-1 border-r border-foreground px-2 py-1.5 text-foreground">{row.label}</div>
+                <div className="w-[100px] px-2 py-1.5 text-right font-mono text-foreground">
+                  {row.value !== null ? (
+                    row.value
+                  ) : (
                     <input
                       type="number"
                       min={0}
                       value={discount || ""}
                       onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
-                      className="w-full bg-transparent px-2 py-1 text-right font-mono outline-none text-foreground"
+                      className="invoice-input w-full text-right font-mono text-foreground"
                     />
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-invoice-border px-3 py-2 font-semibold text-foreground">TAXABLE</td>
-                  <td className="border border-invoice-border px-3 py-2 text-right font-mono text-foreground">
-                    {formatNum(taxable)}
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-invoice-border px-3 py-2 font-semibold text-foreground">VAT 13%</td>
-                  <td className="border border-invoice-border px-3 py-2 text-right font-mono text-foreground">
-                    {formatNum(vat)}
-                  </td>
-                </tr>
-                <tr className="bg-invoice-header-bg font-bold">
-                  <td className="border border-invoice-border px-3 py-2 text-foreground">NET TOTAL</td>
-                  <td className="border border-invoice-border px-3 py-2 text-right font-mono text-foreground">
-                    {formatNum(netTotal)}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="mt-10 flex items-end justify-between text-sm text-muted-foreground">
+        {/* Footer signatures */}
+        <div className="mt-16 flex items-end justify-between text-[12px]">
           <div>
-            <p className="mt-12 border-t border-dashed border-invoice-border pt-1">Buyer's Signature</p>
+            <div className="w-[180px] border-t border-dashed border-foreground pt-1 text-center text-foreground">
+              Buyer's Signature
+            </div>
           </div>
-          <div className="text-right">
-            <p className="font-semibold text-foreground">{BUSINESS.name}</p>
-            <p className="mt-12 border-t border-dashed border-invoice-border pt-1">Authorized Signature</p>
+          <div className="text-center">
+            <p className="font-bold text-foreground">{BUSINESS.name}</p>
+            <div className="mt-10 w-[200px] border-t border-dashed border-foreground pt-1 text-center text-foreground">
+              Authorized Signature
+            </div>
           </div>
         </div>
       </div>
@@ -352,13 +308,11 @@ const Index = () => {
   );
 };
 
-// Simple number to words (for Nepali invoice style)
 function numberToWords(num: number): string {
   if (num === 0) return "Zero";
   const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
     "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
   const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
-
   const convertLakh = (n: number): string => {
     if (n === 0) return "";
     if (n < 20) return ones[n];
@@ -368,7 +322,6 @@ function numberToWords(num: number): string {
     if (n < 10000000) return convertLakh(Math.floor(n / 100000)) + " Lakh" + (n % 100000 ? " " + convertLakh(n % 100000) : "");
     return convertLakh(Math.floor(n / 10000000)) + " Crore" + (n % 10000000 ? " " + convertLakh(n % 10000000) : "");
   };
-
   return convertLakh(num);
 }
 
