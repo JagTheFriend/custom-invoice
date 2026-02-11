@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { Trash2, Plus, Printer } from "lucide-react";
+import { Trash2, Plus, Printer, CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 interface InvoiceItem {
   id: number;
@@ -31,7 +35,7 @@ const EMPTY_ROWS_TARGET = 15;
 
 const Index = () => {
   const [invoiceNo, setInvoiceNo] = useState(generateInvoiceNo());
-  const [invoiceDate, setInvoiceDate] = useState(todayDate());
+  const [invoiceDate, setInvoiceDate] = useState<Date>(new Date());
   const [customerName, setCustomerName] = useState("");
   const [customerContact, setCustomerContact] = useState("");
   const [payMode, setPayMode] = useState("CASH");
@@ -140,11 +144,23 @@ const Index = () => {
             <div className="flex md:justify-end">
               <span className="font-bold text-foreground">INVOICE DATE</span>
               <span className="text-foreground ml-2">: </span>
-              <input
-                value={invoiceDate}
-                onChange={(e) => setInvoiceDate(e.target.value)}
-                className="invoice-input ml-1 w-[100px] text-right text-foreground"
-              />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="invoice-input ml-1 w-[120px] text-right text-foreground flex items-center justify-end gap-1">
+                    {format(invoiceDate, "dd/MM/yyyy")}
+                    <CalendarIcon size={12} className="no-print shrink-0 opacity-50" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 no-print" align="end">
+                  <Calendar
+                    mode="single"
+                    selected={invoiceDate}
+                    onSelect={(d) => d && setInvoiceDate(d)}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         </div>
