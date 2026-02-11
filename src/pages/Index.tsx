@@ -381,7 +381,7 @@ const Index = () => {
                 <textarea
                   value={remarks}
                   onChange={(e) => setRemarks(e.target.value)}
-                  rows={3}
+                  rows={1}
                   className="invoice-input w-full resize-none text-foreground"
                   placeholder="Any remarks..."
                 />
