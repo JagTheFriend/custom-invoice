@@ -431,7 +431,7 @@ const Index = () => {
             </div>
           </div>
           <div className="text-center">
-            <p className="font-bold text-foreground">{BUSINESS.name}</p>
+            {/* <p className="font-bold text-foreground">{BUSINESS.name}</p> */}
             <div className="mt-10 w-[200px] border-t border-dashed border-foreground pt-1 text-center text-foreground">
               Authorized Signature
             </div>
