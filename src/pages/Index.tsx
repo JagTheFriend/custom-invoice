@@ -8,6 +8,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface InvoiceItem {
   id: number;
@@ -324,7 +325,7 @@ const Index = () => {
             ))}
             {/* Empty rows to fill page */}
             {Array.from({ length: emptyRowCount }).map((_, i) => (
-              <tr key={`e-${i}`}>
+              <tr key={`e-${i}`} className="[&>*]:border-y-0">
                 <td className="invoice-cell h-[22px]">&nbsp;</td>
                 <td className="invoice-cell"></td>
                 <td className="invoice-cell"></td>
@@ -351,13 +352,10 @@ const Index = () => {
         </table>
 
         {/* Add item button */}
-        <div className="no-print mt-2">
-          <button
-            onClick={addItem}
-            className="flex items-center gap-1.5 rounded border border-input px-3 py-1.5 text-xs font-medium text-foreground transition hover:bg-secondary"
-          >
+        <div className="no-print m-2 w-full flex justify-center">
+          <Button onClick={addItem} className="text-xs font-medium">
             <Plus size={14} /> Add Item
-          </button>
+          </Button>
         </div>
 
         {/* Bottom section: INWORDS/REMARKS left, DISCOUNT/TAXABLE/VAT/NET right */}
