@@ -13,6 +13,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['IBM Plex Sans', 'sans-serif'],
+        mono: ['IBM Plex Mono', 'monospace'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -46,6 +50,10 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        invoice: {
+          border: "hsl(var(--invoice-border))",
+          "header-bg": "hsl(var(--invoice-header-bg))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
