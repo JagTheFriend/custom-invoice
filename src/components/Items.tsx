@@ -51,7 +51,8 @@ export default function Items({ items, updateItem, removeItem }) {
 							onChange={(e) =>
 								updateItem(item.id, "rate", parseFloat(e.target.value) || 0)
 							}
-							className="invoice-table-input text-right text-foreground"
+							placeholder="Rate"
+							className="invoice-table-input text-right text-foreground placeholder:text-muted-foreground"
 						/>
 					</td>
 					<td className="invoice-cell text-right font-mono">
