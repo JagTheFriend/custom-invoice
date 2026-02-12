@@ -11,7 +11,8 @@ export default function Items({ items, updateItem, removeItem }) {
 						<input
 							value={item.hsCode}
 							onChange={(e) => updateItem(item.id, "hsCode", e.target.value)}
-							className="invoice-table-input text-foreground"
+							placeholder="H.S Code"
+							className="invoice-table-input text-foreground placeholder:text-muted-foreground"
 						/>
 					</td>
 					<td className="invoice-cell p-0">

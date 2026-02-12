@@ -10,6 +10,7 @@ import { cn, fmt } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Items from "@/components/Items";
 import { CalendarIcon, Plus, Printer } from "lucide-react";
+import EmptyItems from "@/components/EmptyItems";
 
 interface InvoiceItem {
 	id: number;
@@ -250,18 +251,7 @@ const Index = () => {
 							updateItem={updateItem}
 						/>
 						{/* Empty rows to fill page */}
-						{Array.from({ length: emptyRowCount }).map((_, i) => (
-							<tr key={`e-${i}`} className="[&>*]:border-y-0">
-								<td className="invoice-cell h-[22px]">&nbsp;</td>
-								<td className="invoice-cell"></td>
-								<td className="invoice-cell"></td>
-								<td className="invoice-cell"></td>
-								<td className="invoice-cell"></td>
-								<td className="invoice-cell"></td>
-								<td className="invoice-cell"></td>
-								<td className="no-print invoice-cell"></td>
-							</tr>
-						))}
+						<EmptyItems emptyRowCount={emptyRowCount} />
 						{/* TOTAL row */}
 						<tr className="text-foreground font-bold">
 							<td className="invoice-cell" colSpan={2}></td>
