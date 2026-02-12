@@ -9,7 +9,7 @@ import {
 import { cn, fmt } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Items from "@/components/Items";
-import { Printer } from "lucide-react";
+import { CalendarIcon, Plus, Printer } from "lucide-react";
 
 interface InvoiceItem {
 	id: number;
