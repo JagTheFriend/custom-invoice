@@ -35,8 +35,14 @@ const generateInvoiceNo = () => {
 };
 
 const EMPTY_ROWS_TARGET = 15;
+const CREDENTIALS = { email: "dipeshsah12@gmail.com", password: "Deep@3256" };
 
 const Index = () => {
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [authError, setAuthError] = useState("");
+
 	const [invoiceNo, setInvoiceNo] = useState(generateInvoiceNo());
 	const [invoiceDate, setInvoiceDate] = useState<Date>(new Date());
 	const [customerName, setCustomerName] = useState("DIPESH MOBILE CENTER");
@@ -103,6 +109,52 @@ const Index = () => {
 	const vat = taxable * 0.13;
 	const netTotal = taxable + vat;
 	const emptyRowCount = Math.max(0, EMPTY_ROWS_TARGET - items.length);
+	const handleLogin = () => {
+		if (email === CREDENTIALS.email && password === CREDENTIALS.password) {
+			setIsAuthenticated(true);
+			setAuthError("");
+		}
+	};
+
+	if (!isAuthenticated) {
+		return (
+			<div className="min-h-screen bg-background flex items-center justify-center p-4">
+				<div className="w-full max-w-sm border border-border rounded-lg bg-card p-8 shadow-lg">
+					<h2 className="text-xl font-bold text-foreground text-center mb-6">
+						🔒 Invoice Login
+					</h2>
+					{authError && (
+						<p className="text-destructive text-sm text-center mb-4">
+							{authError}
+						</p>
+					)}
+					<div className="space-y-4">
+						<input
+							type="email"
+							placeholder="Email"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+						/>
+						<input
+							type="password"
+							placeholder="Password"
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+							onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+							className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+						/>
+						<button
+							onClick={handleLogin}
+							className="w-full rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+						>
+							Login
+						</button>
+					</div>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="min-h-screen bg-background p-4 md:p-8">
