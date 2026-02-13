@@ -135,7 +135,7 @@ const Index = () => {
 				</div>
 
 				{/* Party + Invoice meta */}
-				<div className="mt-3 flex flex-col gap-0 text-[12px] md:flex-row md:justify-between">
+				<div className="invoice-meta-row mt-3 flex flex-col gap-0 text-[12px] md:flex-row md:justify-between">
 					<div className="space-y-0.5">
 						<div className="flex">
 							<span className="inline-block w-[70px] font-bold text-foreground">
@@ -174,7 +174,7 @@ const Index = () => {
 							/>
 						</div>
 					</div>
-					<div className="mt-2 space-y-0.5 md:mt-0 md:text-right">
+					<div className="invoice-meta-right mt-2 space-y-0.5 md:mt-0 md:text-right">
 						<div className="flex md:justify-end">
 							<span className="font-bold text-foreground">INVOICE NO</span>
 							<span className="text-foreground ml-2">: </span>
