@@ -29,11 +29,6 @@ const BUSINESS = {
 	vat: "604366751",
 } as const;
 
-const generateInvoiceNo = () => {
-	const num = Math.floor(Math.random() * 90000) + 10000;
-	return `SB-${num}`;
-};
-
 const EMPTY_ROWS_TARGET = 15;
 const CREDENTIALS = { email: "dipeshsah12@gmail.com", password: "Deep@3256" };
 
@@ -43,7 +38,7 @@ const Index = () => {
 	const [password, setPassword] = useState("");
 	const [authError, setAuthError] = useState("");
 
-	const [invoiceNo, setInvoiceNo] = useState(generateInvoiceNo());
+	const [invoiceNo, setInvoiceNo] = useState("");
 	const [invoiceDate, setInvoiceDate] = useState<Date>(new Date());
 	const [customerName, setCustomerName] = useState("DIPESH MOBILE CENTER");
 	const [customerContact, setCustomerContact] = useState(
@@ -228,17 +223,22 @@ const Index = () => {
 					</div>
 					<div className="invoice-meta-right mt-2 space-y-0.5 md:mt-0 md:text-right">
 						<div className="flex md:justify-end">
-							<span className="font-bold text-foreground">INVOICE NO</span>
-							<span className="text-foreground ml-2">: </span>
+							<span className="inline-block w-[110px] font-bold text-foreground text-right">
+								INVOICE NO
+							</span>
+							<span className="text-foreground">: </span>
 							<input
 								value={invoiceNo}
 								onChange={(e) => setInvoiceNo(e.target.value)}
-								className="invoice-input ml-1 w-[100px] text-right text-foreground"
+								placeholder="Invoice No."
+								className="invoice-input ml-1 w-[100px] text-right text-foreground placeholder:text-muted-foreground"
 							/>
 						</div>
 						<div className="flex md:justify-end">
-							<span className="font-bold text-foreground">INVOICE DATE</span>
-							<span className="text-foreground ml-2">: </span>
+							<span className="inline-block w-[110px] font-bold text-foreground text-right">
+								INVOICE DATE
+							</span>
+							<span className="text-foreground">: </span>
 							<Popover>
 								<PopoverTrigger asChild>
 									<button className="invoice-input ml-1 w-[120px] text-right text-foreground flex items-center justify-end gap-1">
