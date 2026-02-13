@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import Items from "@/components/Items";
 import { CalendarIcon, Plus, Printer } from "lucide-react";
 import EmptyItems from "@/components/EmptyItems";
+import ResultRow from "@/components/ResultRow";
 
 interface InvoiceItem {
 	id: number;
@@ -253,17 +254,7 @@ const Index = () => {
 						{/* Empty rows to fill page */}
 						<EmptyItems emptyRowCount={emptyRowCount} />
 						{/* TOTAL row */}
-						<tr className="text-foreground font-bold">
-							<td className="invoice-cell" colSpan={2}></td>
-							<td className="invoice-cell text-center font-bold">TOTAL</td>
-							<td className="invoice-cell"></td>
-							<td className="invoice-cell"></td>
-							<td className="invoice-cell"></td>
-							<td className="invoice-cell text-right font-mono">
-								{fmt(subtotal)}
-							</td>
-							<td className="no-print invoice-cell"></td>
-						</tr>
+						<ResultRow subtotal={subtotal} />
 					</tbody>
 				</table>
 
